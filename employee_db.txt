@@ -1,0 +1,36 @@
+import psycopg2
+from psycopg2 import Error
+
+try:
+    connection = psycopg2.connect(user="your_username",
+                                  password="your_password",
+                                  host="your_host",
+                                  port="your_port",
+                                  database="your_database")
+    cursor = connection.cursor()
+    # Execute your SQL queries here
+    cursor.execute("SELECT * FROM your_table")
+    records = cursor.fetchall()
+    # Process the fetched records
+except (Exception, psycopg2.Error) as error:
+    # Handle the exception
+    print("Error while connecting to PostgreSQL", error)
+finally:
+    # Close the cursor and connection
+    if connection:
+        cursor.close()
+        connection.close()
+
+
+
+from sqlalchemy import create_engine
+from sqlalchemy.pool import QueuePool
+
+engine = create_engine('postgresql+psycopg2://your_username:your_password@your_host:your_port/your_database',
+                       pool_size=5,
+                       max_overflow=10,
+                       pool_timeout=30,
+                       pool_recycle=1800)
+
+connection = engine.connect()
+# Use the connection for your database operations
